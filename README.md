@@ -122,11 +122,11 @@ Pushes _listnode_ to the end of the array and returns the new length
 Pushes _listnode_ first in the array (pushes existing items back by 1) and returns the new length
 
 
-<b>&lt;type&gt;_ _pop( )</b>
+<b>&lt;type&gt; pop( )</b>
 Takes out the last element in list and returns it. _type_ is the the type that you constructed your list with
 
 
-<b>&lt;type&gt;_ __pop_first( )</b>
+<b>&lt;type&gt; pop_first( )</b>
 Takes out the first element in the list and returns it. _type_ is the type that you constructed your list with.
 
 
