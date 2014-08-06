@@ -101,14 +101,75 @@ int x = arr[0]; // the internal pointers needed by DList has ben overwritten and
 
 
 <b>API</b>
-_DList&lt;typename&gt;_ 
+
+<b>DList&lt;typename&gt;</b>
 Is the root class, its the one that you are using to push, access, remove etc on your array
 _typename_ names the type that the array should hold such as _&lt;int&gt;_ or _&lt;widget *&gt;_
 
-_DListNode&lt;typename&gt;_
+<b>DListNode&lt;typename&gt;</b>
 Is the storage class you should only use this to store your value. _typename_ must be the same as you constructed your _DList_ with.
 
 
+<b>size_t length( )</b>
+Returns the number of elements note that it is returns 1 if there are 1 but you access it by _arr[0]_
 
+
+<b>size_t push(DListNode &listnode)</b>
+Pushes _listnode_ to the end of the array and returns the new length
+
+
+<b>size_t push_first(DListNode &listnode)</b>
+Pushes _listnode_ first in the array (pushes existing items back by 1) and returns the new length
+
+
+<b>&lt;type&gt;_ _pop( )</b>
+Takes out the last element in list and returns it. _type_ is the the type that you constructed your list with
+
+
+<b>&lt;type&gt;_ __pop_first( )</b>
+Takes out the first element in the list and returns it. _type_ is the type that you constructed your list with.
+
+
+<b>bool insert(size_t position, DListNode &listnode)</b>
+Inserts _listnode_ at _position_ pushing those above it back 1 step. Returns false if it could not store it, true otherwise. False is because _position_ is above _length( )_
+
+
+<b>bool remove(size_t position)</b>
+Takes out element at _position_ from the list. Returns true if position is valid so operation could be performed, false otherwise
+
+
+<b>&lt;type&gt; operator[size_t position]</b>
+Returns the value stored at _position_ just like a normal array. _type_ is what you constructed your list with.
+If position isnt valid it tries to return 0, but make it a habit of checking so you dont go out of bounds
+
+
+<b>int indexOf(const &lt;type&gt; value)</b>
+Searches list for _value_ and returns the _position_ if found. Returns -1 if value wasnt found.
+
+
+<b>&lt;type&gt; first( )</b>
+Returns the first value in list and sets internal iterator position to first element. _type_ is what you constructed your list with.
+
+
+<b>&lt;type&gt; next( )</b>
+Returns value from next element in list, sets internal iterator position one element closer to the end. If iterator position is at _first( )_ it returns 0 although you should check this with _canMove( )_ before calling _previous( )_. 
+_type_ is what you constructed your list with.
+
+
+<b>&lt;type&gt; last( )</b>
+Returns the last value in list and sets internal iterator position to last element. _type_ is what you constructed your list with.
+
+
+<b>&lt;type&gt; previous( )</b>
+Returns value from previous element in the list, sets internal iteration position one element closer to beginning. If iterator position is at _first( )_ it returns 0 although you should check this with _canMove( )_ before calling _previous( )_.
+_type_ is what you constructed your list with.
+
+
+<b>bool canMove( )</b>
+Returns true if it is safe to call _next( )_ or _previous( )_. If internal iteror position will be past the end or before the beginning _canMove( )_ returns false. Use this in conjuction with _first( )_and _next( )_ also with _last( )_ and _previous( )_ to control a loop.
+
+
+<b>const int at( )</b>
+Returns the internal iterator position as a read only. If iterator past ends it returns -1
 
 
