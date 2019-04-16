@@ -278,6 +278,8 @@ public:
 		}
 		return _empty(); 
 	}
+	T &begin() { return first(); }
+	T &end() { return _empty(); }
 	// this ends a iter loop
 	const bool canMove() const { return _iterPos != 0; }
 	
@@ -298,6 +300,8 @@ public:
 		}	
 		return _empty();
 	}
+	T &rbegin(){ return last(); }
+	T &rend(){ return _empty(); }
 };
 
 
