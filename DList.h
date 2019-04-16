@@ -38,7 +38,7 @@ public:
 	// a container for the internal linked list
 	typedef DListNode<T> Node;
 	
-private:	
+protected:
 	T _emptyStore; //create memory storage so we can return a empty value when needed (idx out of bound)
 								 // this is needed as we use return by reference instead of pointers
 	Node *_first;
@@ -302,6 +302,55 @@ public:
 	}
 	T &rbegin(){ return last(); }
 	T &rend(){ return _empty(); }
+};
+
+/// helper class, handles Nodes new delete
+template<typename T>
+class DListDynamic : public DList<T>
+{
+public:
+  typedef DListNode<T> Node;
+  DListDynamic() : DList<T>::DList() {}
+  ~DListDynamic() { DList<T>::~DList(); }
+  size_t push(T vlu) {
+    Node *n = new Node(vlu);
+    return DList<T>::push(*n);
+  }
+  T &pop() {
+    Node *n = DList<T>::_last;
+    T vlu = DList<T>::pop();
+    if (n) delete n;
+    return vlu;
+  }
+  size_t push_first(T vlu) {
+    Node *n = new Node(vlu);
+    return DList<T>::push_first(n);
+  }
+  T &pop_first(){
+    Node *n = DList<T>::_first;
+    T vlu = DList<T>::pop_first();
+    if (n) delete n;
+    return vlu;
+  }
+  bool remove(size_t idx){
+    if (idx >= DList<T>::_len)
+      return false;
+
+    DList<T>::_seek(idx);
+    Node *n = DList<T>::_seekPos;
+
+    bool res = DList<T>::remove(idx);
+    if (n) delete n;
+    return res;
+  }
+  bool insert(size_t idx, T vlu){
+    Node *n = new Node(vlu);
+    bool res = DList<T>::insert(idx, *n);
+    if (!res)
+      delete n;
+    return res;
+  }
+
 };
 
 
