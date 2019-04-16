@@ -311,16 +311,20 @@ class DListDynamic : public DList<T>
 public:
   typedef DListNode<T> Node;
   DListDynamic() : DList<T>::DList() {}
-  ~DListDynamic() { DList<T>::~DList(); }
+  ~DListDynamic() {
+    while(DList<T>::length())
+      this->pop(); // clear memory
+    DList<T>::~DList();
+  }
   size_t push(T vlu) {
     Node *n = new Node(vlu);
     return DList<T>::push(*n);
   }
   T &pop() {
     Node *n = DList<T>::_last;
-    T vlu = DList<T>::pop();
+    T *vlu = &DList<T>::pop();
     if (n) delete n;
-    return vlu;
+    return *vlu;
   }
   size_t push_first(T vlu) {
     Node *n = new Node(vlu);
@@ -328,9 +332,9 @@ public:
   }
   T &pop_first(){
     Node *n = DList<T>::_first;
-    T vlu = DList<T>::pop_first();
+    T *vlu = &DList<T>::pop_first();
     if (n) delete n;
-    return vlu;
+    return *vlu;
   }
   bool remove(size_t idx){
     if (idx >= DList<T>::_len)
