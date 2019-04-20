@@ -350,7 +350,7 @@ public:
     while(n != nullptr) {
       Node *tmp = n;
       n = n->_next;
-      delete n;
+      delete tmp;
     }
     DList<T>::clear();
   }
