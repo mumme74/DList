@@ -1,3 +1,24 @@
+
+/**
+* a dynamic array, not particulary fast or optimized its actually a linked list but it does
+* support adding, removing and accessing element with push and pop,
+* push_begin() and pop_begin(), accesses with at, insert, remove, and []
+* iteration helpers begin, next and atEnd (no true iterators)
+* it has no but no sparse array support
+*
+*  Copyright (c) 2014 Fredrik Johansson mumme74@github.com. All right reserved.
+*  This library is free software; you can redistribute it and/or
+*  modify it under the terms of the GNU Lesser General Public
+*  License as published by the Free Software Foundation; either
+*  version 2.1 of the License, or (at your option) any later version.
+*  This library is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+*  Lesser General Public License for more details.
+*  You should have received a copy of the GNU Lesser General Public
+*  License along with this library; if not, write to the Free Software
+*  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+*/
 #ifndef DLIST_H
 #define DLIST_H
 
@@ -12,7 +33,6 @@
 * iteration helpers begin, next and atEnd (no true iterators)
 * it has no but no sparse array support
 * 
-*  But it does not have any memory manegment, thats up to the user
 */
 
 template<typename T>
