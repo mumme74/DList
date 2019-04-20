@@ -19,8 +19,12 @@ template<typename T>
 class DList;
 
 template<typename T>
+class DListDynamic;
+
+template<typename T>
 class DListNode {
 	friend class DList<T>;
+	friend class DListDynamic<T>;
 	DListNode *_next;
 	DListNode *_previous;
 protected:
@@ -104,6 +108,12 @@ public:
 	// return the length of the array
 	size_t length() const { return _len;}
 	
+	// clears all elements of array
+	void clear(){
+	  _last = _first = _iterPos = _seekPos = nullptr;
+	  _iterPosIdx = _seekPosIdx = _len = 0;
+	}
+
 	// insert one at end return new length
 	size_t push(Node &n){
 		if (_first == 0){
@@ -312,10 +322,19 @@ public:
   typedef DListNode<T> Node;
   DListDynamic() : DList<T>::DList() {}
   ~DListDynamic() {
-    while(DList<T>::length())
-      this->pop(); // clear memory
+    clear(); // clear memory
     DList<T>::~DList();
   }
+  void clear(){
+    Node *n = DList<T>::_first;
+    while(n != nullptr) {
+      Node *tmp = n;
+      n = n->_next;
+      delete n;
+    }
+    DList<T>::clear();
+  }
+
   size_t push(T vlu) {
     Node *n = new Node(vlu);
     return DList<T>::push(*n);
@@ -328,7 +347,7 @@ public:
   }
   size_t push_first(T vlu) {
     Node *n = new Node(vlu);
-    return DList<T>::push_first(n);
+    return DList<T>::push_first(*n);
   }
   T &pop_first(){
     Node *n = DList<T>::_first;
@@ -354,7 +373,6 @@ public:
       delete n;
     return res;
   }
-
 };
 
 

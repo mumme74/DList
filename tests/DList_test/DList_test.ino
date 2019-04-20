@@ -1,27 +1,50 @@
 #include <DList.h>
 #include <testmacros.h>
 
+initTests();
+
 class TestClass {
 public:
   const char *name;
+  static bool deleted;
   TestClass(const char str[]) : name(str) { }
   TestClass(){ name = NULL; } // must have a default empty constructor
+  ~TestClass() { 
+    deleted = true;
+    //Serial.println("delete");
+  }
 };
+bool TestClass::deleted = false;
 
 
 
 void runTests(){
-	// declare a dynamic array that stores ints
-	DList<int> iArr;
-	DList<TestClass> tcArr;
-	typedef DListNode<int> iNode;
-	typedef DListNode<TestClass> tcNode;
-	
-	testBegin();
-	
-	//test initialization
-	test(iArr.length(), 0);
-	test(tcArr.length(), 0);
+  Serial.println("begin");
+  testBegin();
+  
+  testInts();
+  testStrings();
+  testChars();
+  testDynamicNode();
+
+  {
+    DList<TestClass> tcArr;
+    typedef DListNode<TestClass> tcNode;
+  
+  
+    //test initialization
+    test(tcArr.length(), 0);
+  }
+  testEnd();
+}
+
+void testInts() {
+  
+  // declare a dynamic array that stores ints
+  DList<int> iArr;
+  typedef DListNode<int> iNode;
+  //test initialization
+  test(iArr.length(), 0);
 
 	// test push()
 	iNode i10(10);
@@ -46,7 +69,7 @@ void runTests(){
 	test(iArr.length(),0);
 	test(iArr[0], 0);
 
-
+{
 	// test insert
 	iNode i29 = 29, i30 = 30, i31 = 31, i34 = 34, i35 = 35, i36 = 36;
 	test(iArr.insert(0, i30),true);
@@ -76,7 +99,7 @@ void runTests(){
 	test(iArr[4], 35);
 	test(iArr.insert(6, i36), false);
 	test(iArr.length(), 5);
-	
+}
 
 	// test remove arr is now: [29, 34, 30, 31, 35]
 	test(iArr.remove(5), false); // remove non existant
@@ -211,7 +234,11 @@ void runTests(){
 	// test writing to a empty value Note!! this is actually an error, code should ever get array values that are out of bounds
 	test(iArr[20] = 100, 100);
 	test(iArr[20], 0);
-	
+  
+
+}
+
+void testStrings() {
 	
 	// tests with String type
 	typedef DListNode<String> SNode;
@@ -242,19 +269,22 @@ void runTests(){
 	testS(SArr[2], "s3");
 	testS(SArr[3], "s4");
 	
-	int cnt = 0; i = 1;
+	uint8_t cnt = 0, i = 1;
 	for(auto s = SArr.first(); SArr.canMove();s = SArr.next(), ++i){
 		testS(s, String("s") + i);
 		++cnt; 
 	}
 	
 	test(cnt, 4);
+}
+
+void testChars() {
 	
 	DList<char> cArr;
 	typedef DListNode<char> cNode;
 	cNode c0 = '0', c1 = '1';
 	// empty array
-	i = 0;
+	uint8_t i = 0;
 	for(auto c = cArr.first(); cArr.canMove(); c = cArr.next()){
 		test(c - 48, i);
 		i++;
@@ -278,16 +308,82 @@ void runTests(){
 		i++;
 	}
 	test(i, 2);
-	
-	testEnd();
+
+  cArr.clear();
+  test(cArr.length(), 0);
+  
+}
+
+void testDynamicNode() {
+  int numbers[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+  DListDynamic<int> dArr;
+  int i = 0;
+  
+  test(dArr.length(), 0);
+  test(i, (dArr[0]));
+
+  for (i = 0; i < 10; ++i)
+    dArr.push(numbers[i]);
+  
+  test(dArr.length(), 10);
+
+  i = 0;
+  for (auto itm = dArr.first(); dArr.canMove(); itm = dArr.next()) {
+    test(itm, numbers[i++]);
+  }
+
+  while(dArr.length()) {
+    auto itm = dArr.pop();
+    test(itm, numbers[--i]);
+  }
+
+  i = 0;
+  test(0, dArr.length());
+
+  TestClass cls[10] = {"one", "two", "three", "four", "five", "six", "eight", "nine", "ten" };
+  TestClass *nulCls = nullptr;
+  DListDynamic<TestClass*> dCArr;
+  test(0, (int)dCArr[0]);
+
+  
+  for(i = 0; i < 10; ++i) {
+    dCArr.push_first(&cls[i]);
+    test((int)&cls[i], (int)dCArr.first());
+  }
+  test(dCArr.length(), 10);
+
+  for(i = 0; i < 10; ++i) {
+    test(dCArr[i]->name, cls[9 - i].name); 
+  }
+  
+
+  test(true, dCArr.remove(5));
+  test(dCArr.length(), 9);
+
+  test(dCArr.insert(5, &cls[5]), true);
+  test(dCArr[5]->name, cls[5].name);
+  dCArr[5] = &cls[4];
+
+  i = 10;
+  while(i > 0){
+    TestClass *itm = dCArr[--i];
+    test((int)&cls[9 - i], (int)itm);
+  }
+  test(false, TestClass::deleted);
+
+  dCArr.clear();
+  test(dCArr.length(), 0);
+  
+  test(false, TestClass::deleted);
 }
 
 void setup(){
-	
+	delay(100);
 	Serial.begin(115200);	
 	
 }
 
 void loop(){
 	testLoop();
+ //Serial.println("loop");
 }
